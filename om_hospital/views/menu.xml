@@ -1,0 +1,12 @@
+<odoo>
+  <data> 
+      <!-- menuitems and sub menuitems -->
+    <menuitem id="menu_hospital_root" name="Hospital" sequence="0" action="" web_icon="om_hospital,static/description/icon.png" />
+    <menuitem id="menu_patient_master" name="Patient Details" parent="menu_hospital_root" sequence="0" action="" />  
+    
+
+    <!-- we have put an already existing action's external id in below menuitem's 
+    action which takes us to the customers page. -->
+    <!-- <menuitem id="menu_patient" name="Patient" parent="menu_patient_master" sequence="0" action="contacts.action_contacts" /> -->
+  </data>
+</odoo>
