@@ -1,6 +1,6 @@
 <odoo>
     <data>
-        <!-- basic list/tree view for patients -->
+        <!-- list/tree view for patients -->
         <record id="view_hospital_patient_tree" model="ir.ui.view">
             <field name="name">hospital.patient.tree</field>
             <field name="model">hospital.patient</field>
@@ -10,8 +10,9 @@
                     <field name="age" />  
                 </tree>
             </field>
-        </record>       
-        <!-- basic form view for patient model -->
+        </record>     
+
+        <!-- form view for patient model -->
         <record id="view_hospital_patient_form" model="ir.ui.view">
             <field name="name">hospital.patient.form</field>
             <field name="model">hospital.patient</field>
@@ -21,12 +22,14 @@
                         <group>
                             <group>
                                 <field name="name" /> <!-- name is defined in the model -->
+                                <field name="date_of_birth" /> <!-- date of birht is computed based on age field -->
                                 <field name="gender" /> <!-- gender is defined in the model -->
                             </group>
                             <group>
                                 <field name="age" /> <!-- age is defined in the model -->
                                 <field name="ref" string="Reference"/> <!-- ref is defined in the model -->
                                 <field name="active" invisible="1"/> <!-- active is defined in the model -->
+                                <field name="appointment_id"/> <!-- appointment_id is defined in the model -->
                             </group>
                         </group> 
                     </sheet>
@@ -39,7 +42,8 @@
                 </form>
             </field>
         </record>
-        <!-- basic search view for patients -->
+
+        <!-- search view for patients -->
         <record id="view_hospital_patient_search" model="ir.ui.view">
             <field name="name">hospital.patient.search</field>
             <field name="model">hospital.patient</field>
@@ -53,11 +57,11 @@
                     <separator />
                     <filter name="filter_female" string="Female" domain="[('gender', '=', 'female')]"  />
                     <separator/>
-                    <!-- all kids under 15 or 15 will be shown only -->
+                      <!-- all kids under 15 or 15 will be shown only -->
                     <filter name="filter_kids" string="Kids" domain="[('age', '&lt;=', 15)]" />
-                    <!-- all adults will be filtered -->
+                     <!-- all adults will be filtered  --> 
                     <filter name="filter_adults" string="Adults" domain="[('age', '>=', 15)]" /> 
-                    <filter name="filter_archived" string="Archived" domain="[('active', '=', False)]"/>
+                    <filter name="filter_archived" string="Archived" domain="[('active', '=', False)]"/> 
                     <group>
                         <filter name="group_by_gender" context="{'group_by': 'gender'}" />
                     </group>
@@ -67,6 +71,7 @@
                 </search>
             </field>
         </record>    
+
         <!-- action that is called by the menuitem with id menu_patient -->
         <record id="action_hospital_patient" model="ir.actions.act_window">
             <field name="name">Patients</field>
@@ -80,6 +85,7 @@
                 </p>
             </field>
         </record>  
+
         <!-- the above action is called by clicking on below menuitem -->
         <menuitem id="menu_patient" name="Patients" parent="menu_patient_master" sequence="0" action="action_hospital_patient" />
     </data>

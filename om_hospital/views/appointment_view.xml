@@ -1,0 +1,87 @@
+<odoo>
+    <data>
+        <!-- action that is called by the menuitem with id menu_appointment -->
+        <record id="action_hospital_appointment" model="ir.actions.act_window">
+            <field name="name">Appointments</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hospital.appointment</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context"></field>  
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    There is no data!
+                </p>
+            </field>
+        </record> 
+
+        <!-- list/tree view for Appointment --> 
+        <record id="view_hospital_appointment_tree" model="ir.ui.view">
+            <field name="name">hospital.appointment.tree</field>
+            <field name="model">hospital.appointment</field>
+            <field name="arch" type="xml">
+                <tree>  
+                    <field name="patient_id" /> 
+                    <field name="gender" string="Sex"/>
+                    <field name="booking_date" /> 
+                    <field name="appointment_time" />
+                </tree>
+            </field>
+        </record>    
+
+        <!-- form view for appointment model -->
+        <record id="view_hospital_appointment_form" model="ir.ui.view">
+            <field name="name">hospital.appointment.form</field>
+            <field name="model">hospital.appointment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet> 
+                        <group>
+                            <group>
+                                <field name="appointment_time" />
+                                <field name="patient_id" />
+                                <field name="gender"/> 
+                                <field name="booking_date" />
+                            </group> 
+                            <group>
+                                <field name="ref" /> 
+                                <field name="booking_date" />
+                            </group>
+                        </group> 
+                    <notebook>
+                        <page string="Patient Information" name="prescription">
+                            <group>
+                                <field name="patient_id" />
+                                <field name="patients_date_of_birth" string="Pateint Birth Date"/>
+                            </group>
+                        </page>
+                        <page string="Pharmacy" name="pharmacy">
+                            <group>
+                                
+                            </group>
+                        </page>
+                    </notebook>
+                    </sheet>
+                    <!-- Chatter -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user" />
+                        <field name="activity_ids" />
+                        <field name="message_ids" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- search view for Appointment -->
+        <record id="view_hospital_appointment_search" model="ir.ui.view">
+            <field name="name">hospital.appointment.search</field>
+            <field name="model">hospital.appointment</field>
+            <field name="arch" type="xml"> 
+                <search> 
+                </search>
+            </field>
+        </record>    
+       
+        <!-- the above action is called by clicking on below menuitem -->
+        <menuitem id="menu_appointment" name="Appointments" parent="menu_patient_master" sequence="10" action="action_hospital_appointment" />
+    </data>
+  </odoo>
