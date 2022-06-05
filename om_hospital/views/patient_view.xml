@@ -49,7 +49,7 @@
             <field name="model">hospital.patient</field>
             <field name="arch" type="xml"> 
                 <search>
-                    <field name="name" filter_domain="['|', ('name', 'ilike', self),('ref', 'ilike', self)]" />  
+                    <field name="name" string="Name/Reference" filter_domain="['|', ('name', 'ilike', self),('ref', 'ilike', self)]" />  
                     <field name="gender" />  
                     <field name="age" /> 
                     <field name="ref"/> 

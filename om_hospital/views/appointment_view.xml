@@ -19,7 +19,7 @@
             <field name="name">hospital.appointment.tree</field>
             <field name="model">hospital.appointment</field>
             <field name="arch" type="xml">
-                <tree>  
+                <tree delete="0" edit="0">  
                     <field name="patient_id" /> 
                     <field name="gender" string="Sex"/>
                     <field name="booking_date" /> 
@@ -34,7 +34,15 @@
             <field name="model">hospital.appointment</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                    </header>
                     <sheet> 
+                        <div class="oe_title">
+                            <h1>
+                                <field name="priority" widget="priority"/>
+                            </h1>
+                        </div>
                         <group>
                             <group>
                                 <field name="appointment_time" />
@@ -50,8 +58,7 @@
                     <notebook>
                         <page string="Patient Information" name="prescription">
                             <group>
-                                <field name="patient_id" />
-                                <field name="patients_date_of_birth" string="Pateint Birth Date"/>
+                                <field name="perscription" placeholder="Enter your prescription" />
                             </group>
                         </page>
                         <page string="Pharmacy" name="pharmacy">
@@ -77,6 +84,9 @@
             <field name="model">hospital.appointment</field>
             <field name="arch" type="xml"> 
                 <search> 
+                    <group>
+                        <filter name="group_by_priority" context="{'group_by': 'priority'}"/>
+                    </group>
                 </search>
             </field>
         </record>    
