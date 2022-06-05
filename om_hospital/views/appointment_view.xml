@@ -19,11 +19,20 @@
             <field name="name">hospital.appointment.tree</field>
             <field name="model">hospital.appointment</field>
             <field name="arch" type="xml">
-                <tree delete="0" edit="0">  
-                    <field name="patient_id" /> 
-                    <field name="gender" string="Sex"/>
-                    <field name="booking_date" /> 
-                    <field name="appointment_time" />
+                <tree decoration-success="state == 'done'" decoration-danger="state == 'cancel'" sample="1" multi_edit="1">  
+                    <field name="patient_id" optional="show"/> 
+                    <field name="doctor_id" widget="many2one_avatar_user"/>
+                    <field name="gender" string="Sex" optional="hide"/>
+                    <field name="booking_date" optional="show"/> 
+                    <field name="appointment_time" optional="hide"/>
+                    <field name="activity_ids" widget="list_activity"/>
+                    <field name="state" 
+                        widget="badge" 
+                        decoration-success="state=='done'" 
+                        decoration-info="state == 'draft'" 
+                        decoration-danger="state == 'cancel'"
+                        decoration-warning="state == 'in_consultation'" 
+                        />
                 </tree>
             </field>
         </record>    
@@ -35,7 +44,11 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                        <button name="action_in_consultation" string="In Consultation" type="object" states="draft" class="oe_highlight"/>
+                        <button name="action_done" string="Mark As Done" type="object" states="in_consultation" class="oe_highlight"/>
+                        <button name="action_cancel" string="Cancel" type="object" states="draft,in_consultation"/>
+                        <button name="action_draft" string="Reset To Draft" type="object" states="cancel" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_consultation,done"/>
                     </header>
                     <sheet> 
                         <div class="oe_title">
@@ -46,19 +59,19 @@
                         <group>
                             <group>
                                 <field name="appointment_time" />
-                                <field name="patient_id" />
-                                <field name="gender"/> 
                                 <field name="booking_date" />
+                                <field name="doctor_id" widget="many2one_avatar_user"/>
                             </group> 
                             <group>
-                                <field name="ref" /> 
-                                <field name="booking_date" />
+                                <field name="patient_id" default_focus="1"/>
+                                <field name="gender"/>  
+                                <field name="ref"/> 
                             </group>
                         </group> 
                     <notebook>
-                        <page string="Patient Information" name="prescription">
+                        <page string="Perscription" name="prescription">
                             <group>
-                                <field name="perscription" placeholder="Enter your prescription" />
+                                <field name="perscription" placeholder="Enter your prescription" options="{'collaborative': true, 'resizable':true}"/>
                             </group>
                         </page>
                         <page string="Pharmacy" name="pharmacy">

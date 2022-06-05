@@ -24,7 +24,7 @@ class HospitalPatient(models.Model):
             if rec.date_of_birth: 
                 rec.age = today.year - rec.date_of_birth.year
             else:
-                rec.age = 0
+                rec.age = 1
 
 
 
