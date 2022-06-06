@@ -43,19 +43,22 @@
             <field name="model">hospital.appointment</field>
             <field name="arch" type="xml">
                 <form>
+                    <!-- Status bar -->
                     <header>
                         <button name="action_in_consultation" string="In Consultation" type="object" states="draft" class="oe_highlight"/>
-                        <button name="action_done" string="Mark As Done" type="object" states="in_consultation" class="oe_highlight"/>
-                        <button name="action_cancel" string="Cancel" type="object" states="draft,in_consultation"/>
+                        <button name="action_done" string="Mark As Done" type="object" states="in_consultation" class="oe_highlight" data-hotkey="v"/>
+                        <button name="action_cancel" string="Cancel" type="object" states="draft,in_consultation" data-hotkey="z" />
                         <button name="action_draft" string="Reset To Draft" type="object" states="cancel" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,in_consultation,done"/>
                     </header>
                     <sheet> 
+                        <!-- Priority Widget -->
                         <div class="oe_title">
                             <h1>
                                 <field name="priority" widget="priority"/>
                             </h1>
                         </div>
+                        <!-- Form Fields -->
                         <group>
                             <group>
                                 <field name="appointment_time" />
@@ -68,18 +71,27 @@
                                 <field name="ref"/> 
                             </group>
                         </group> 
-                    <notebook>
-                        <page string="Perscription" name="prescription">
-                            <group>
-                                <field name="perscription" placeholder="Enter your prescription" options="{'collaborative': true, 'resizable':true}"/>
-                            </group>
-                        </page>
-                        <page string="Pharmacy" name="pharmacy">
-                            <group>
-                                
-                            </group>
-                        </page>
-                    </notebook>
+                        <!-- Notebook -->
+                        <notebook>
+                            <page string="Perscription" name="prescription">
+                                <group>
+                                    <field name="perscription" placeholder="Enter your prescription" options="{'collaborative': true, 'resizable':true}"/>
+                                </group>
+                            </page>
+                            <page string="Pharmacy" name="pharmacy">
+                                <group> 
+                                    <field name="pharmacy_line_ids">
+                                        <tree editable="bottom">
+                                            <field name="product_id" />
+                                            <field name="price_unit"/>
+                                            <field name="qty"/>
+                                            <field name="total_price"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                        </notebook>
+
                     </sheet>
                     <!-- Chatter -->
                     <div class="oe_chatter">

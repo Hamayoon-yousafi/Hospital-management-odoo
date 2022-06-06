@@ -1,3 +1,4 @@
+from email.policy import default
 from odoo import models, fields, api
 
 
@@ -14,6 +15,7 @@ class HospitalAppointment(models.Model):
     gender = fields.Selection(related="patient_id.gender") # through patient_id, which is connected through relationship with patient model, has access to patient.gender
     perscription = fields.Html()
     doctor_id = fields.Many2one('res.users', string='Doctor')
+    pharmacy_line_ids = fields.One2many('appointment.pharmacy.lines', 'appointment_id', string="Pharmacy Lines")
     priority = fields.Selection([
         ('0', 'Normal'), 
         ('1', 'Low'), 
@@ -51,3 +53,21 @@ class HospitalAppointment(models.Model):
         self.state = "cancel" 
     def action_draft(self):
         self.state = "draft"
+
+class AppointmentPharmacy(models.Model):
+    _name = "appointment.pharmacy.lines"
+    _description = "Appointment Pharmacy Lines"
+
+    product_id = fields.Many2one('product.product', required=True)
+    price_unit = fields.Float(string='Price', related="product_id.list_price", compute="_compute_price")
+    qty = fields.Integer(default=1)
+    total_price = fields.Float(compute="_compute_price")
+    appointment_id = fields.Many2one('hospital.appointment', string="Appointment")
+
+    # This decorator will make age field change even without saving the changes made to date_of_birth. Changing age will occur while changing date_of_birth. 
+    @api.depends('qty') 
+    def _compute_price(self): 
+        for rec in self: 
+            rec.total_price = rec.price_unit * rec.qty 
+    
+
