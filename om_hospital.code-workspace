@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../community"
+		},
+		{
+			"path": "../enterprise"
+		}
+	],
+	"settings": {}
+}

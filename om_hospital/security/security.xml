@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record model="ir.module.category" id="om_hospital_management">
+        <field name="name">Overtime</field>
+        <field name="description">User access level for Overtime module</field>
+        <field name="sequence">20</field>
+   </record>
+   <record id="overtime_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="om_hospital_management"/>
+    </record>
+    <record id="overtime_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="om_hospital_management"/>
+        <field name="implied_ids" eval="[(4, ref('overtime_user'))]"/>
+    </record>
+    <record id = "fleet_rule_vehicle_visibility_user" model = "ir.rule"> 
+        <field name = "name"> User can only see his / her vehicle </field> 
+        <field name = "model_id" ref = "model_fleet_vehicle" /> 
+        <field name = "groups" eval = "[(4, ref ('fleet_group_user'))]" /> 
+        <field name = "perm_read" eval = "True" /> 
+        <field name = "perm_write" eval = "True" /> 
+        <field name = "perm_create" eval = "False" /> 
+        <field name = "perm_unlink" eval = "False" /> 
+        <field name = "domain_force"> [('driver_id', '=', user.partner_id.id)] </field> 
+     </record>
+</odoo>
