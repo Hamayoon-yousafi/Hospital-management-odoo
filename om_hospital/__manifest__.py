@@ -24,14 +24,15 @@
 
     # always loaded
     'data': [
-        'security/security.xml',
+        # 'security/security.xml',
         'security/ir.model.access.csv',
         'views/views.xml',
         'views/templates.xml',
         'views/menu.xml',
         'views/patient_view.xml',
         'views/female_patient_view.xml',
-        'views/appointment_view.xml'
+        'views/appointment_view.xml',
+        'views/patient_tag_view.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

@@ -1,4 +1,3 @@
-from email.policy import default
 from odoo import models, fields, api
 from datetime import date
 
@@ -15,6 +14,8 @@ class HospitalPatient(models.Model):
     gender = fields.Selection([("male", "Male"), ("female", "Female")], tracking=True)
     active = fields.Boolean(string="Active", default=True, tracking=True) # Set the default to True so new records are active (unarchived) by defualt.
     appointment_id = fields.Many2one('hospital.appointment', string="Appointment")
+    image = fields.Binary()
+    tag_ids = fields.Many2many("patient.tag", string="Tags")
 
     @api.depends('date_of_birth') 
     # This decorator will make age field change even without saving the changes made to date_of_birth. Changing age will occur while changing date_of_birth. 

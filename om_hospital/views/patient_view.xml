@@ -19,11 +19,13 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet> 
+                        <field name="image" widget="image" class="oe_avatar"/>
                         <group>
                             <group>
                                 <field name="name" /> <!-- name is defined in the model -->
                                 <field name="date_of_birth" /> <!-- date of birht is computed based on age field -->
                                 <field name="gender" /> <!-- gender is defined in the model -->
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </group>
                             <group>
                                 <field name="age" /> <!-- age is defined in the model -->

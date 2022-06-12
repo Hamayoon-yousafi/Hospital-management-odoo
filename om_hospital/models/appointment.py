@@ -1,4 +1,3 @@
-from email.policy import default
 from odoo import models, fields, api
 
 
@@ -16,6 +15,7 @@ class HospitalAppointment(models.Model):
     perscription = fields.Html()
     doctor_id = fields.Many2one('res.users', string='Doctor')
     pharmacy_line_ids = fields.One2many('appointment.pharmacy.lines', 'appointment_id', string="Pharmacy Lines")
+    hide_sales_price = fields.Boolean()
     priority = fields.Selection([
         ('0', 'Normal'), 
         ('1', 'Low'), 

@@ -5,7 +5,7 @@
             <field name="name">Appointments</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hospital.appointment</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,activity</field>
             <field name="context"></field>  
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -68,14 +68,15 @@
                             <group>
                                 <field name="patient_id" default_focus="1"/>
                                 <field name="gender"/>  
-                                <field name="ref"/> 
+                                <field name="ref"/>
+                                <field name="hide_sales_price"/> 
                             </group>
                         </group> 
                         <!-- Notebook -->
                         <notebook>
                             <page string="Perscription" name="prescription">
                                 <group>
-                                    <field name="perscription" placeholder="Enter your prescription" options="{'collaborative': true, 'resizable':true}"/>
+                                    <field name="perscription" placeholder="Enter your prescription" options="{'collaborative': true, 'resizable':true, 'codeview':true}"/>
                                 </group>
                             </page>
                             <page string="Pharmacy" name="pharmacy">
@@ -83,7 +84,7 @@
                                     <field name="pharmacy_line_ids">
                                         <tree editable="bottom">
                                             <field name="product_id" />
-                                            <field name="price_unit"/>
+                                            <field name="price_unit" attrs="{'column_invisible': [('parent.hide_sales_price', '=', True)]}"/>
                                             <field name="qty"/>
                                             <field name="total_price"/>
                                         </tree>
@@ -100,6 +101,26 @@
                         <field name="message_ids" />
                     </div>
                 </form>
+            </field>
+        </record>
+
+        <!-- Activity View For Appointment -->
+        <record id="view_hospital_appointment_activity" model="ir.ui.view">
+            <field name="name">hospital.appointment.activity</field>
+            <field name="model">hospital.appointment</field>
+            <field name="arch" type="xml">
+                <activity string="Appointment">
+                    <field name="patient_id" />
+                    <field name="ref"/>
+                    <templates>
+                        <div t-name="activity-box">
+                            <img t-att-src="activity_image('hospital.patient', 'image', record.patient_id.raw_value)" t-att-title="record.patient_id.value" t-att-alt="record.patient_id.value"/>
+                            <div>
+                                <field name="ref" display="full" />
+                            </div>
+                        </div>
+                    </templates>
+                </activity>
             </field>
         </record>
 

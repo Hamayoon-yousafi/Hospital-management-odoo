@@ -2,7 +2,14 @@
   <data> 
       <!-- menuitems and sub menuitems -->
     <menuitem id="menu_hospital_root" name="Hospital" sequence="0" action="" web_icon="om_hospital,static/description/icon.png" />
-    <menuitem id="menu_patient_master" name="Patient Details" parent="menu_hospital_root" sequence="0" action="" />  
+    <menuitem id="menu_patient_master" name="Patient Details" parent="menu_hospital_root" sequence="0" action="" />
+    <menuitem
+      id="menu_configuration"
+      name="Configuration"
+      parent="menu_hospital_root"
+      sequence="10"
+      action=""
+      />  
     
 
     <!-- we have put an already existing action's external id in below menuitem's 
