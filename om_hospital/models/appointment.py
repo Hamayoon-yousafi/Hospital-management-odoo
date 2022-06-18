@@ -1,6 +1,5 @@
 from odoo import models, fields, api
 
-
 class HospitalAppointment(models.Model):
     _name = 'hospital.appointment'
     _description = 'Hospital Appointment'
@@ -30,6 +29,7 @@ class HospitalAppointment(models.Model):
         default="draft", 
         required=True, 
         string="Status")
+    appointment_count = fields.Integer()
 
 
     @api.onchange('patient_id') # this function will be called when patient_id field is changed
@@ -50,7 +50,9 @@ class HospitalAppointment(models.Model):
     def action_done(self):
         self.state = "done" 
     def action_cancel(self):
-        self.state = "cancel" 
+        action = self.env.ref('om_hospital.action_cancel_appointment').read()[0]
+        return action
+        #self.state = "cancel" 
     def action_draft(self):
         self.state = "draft"
 

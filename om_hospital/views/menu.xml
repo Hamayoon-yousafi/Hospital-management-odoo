@@ -10,10 +10,13 @@
       sequence="10"
       action=""
       />  
-    
 
-    <!-- we have put an already existing action's external id in below menuitem's 
-    action which takes us to the customers page. -->
-    <!-- <menuitem id="menu_patient" name="Patient" parent="menu_patient_master" sequence="0" action="contacts.action_contacts" /> -->
+    <menuitem
+      id="menu_cancel_appointment"
+      name="Cancellation"
+      parent="menu_appointment"
+      action="action_cancel_appointment"
+      sequence="50"/>
+     
   </data>
 </odoo>

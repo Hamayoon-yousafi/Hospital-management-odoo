@@ -47,6 +47,9 @@
                     <header>
                         <button name="action_in_consultation" string="In Consultation" type="object" states="draft" class="oe_highlight"/>
                         <button name="action_done" string="Mark As Done" type="object" states="in_consultation" class="oe_highlight" data-hotkey="v"/>
+                        <!-- Calling wizard using type action button -->
+                        <!-- <button name="%(om_hospital.action_cancel_appointment)d" string="Cancel" type="action" states="draft,in_consultation" data-hotkey="z" /> -->
+                        <!-- Calling wizard using type object button -->
                         <button name="action_cancel" string="Cancel" type="object" states="draft,in_consultation" data-hotkey="z" />
                         <button name="action_draft" string="Reset To Draft" type="object" states="cancel" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,in_consultation,done"/>
@@ -138,6 +141,7 @@
         </record>    
        
         <!-- the above action is called by clicking on below menuitem -->
-        <menuitem id="menu_appointment" name="Appointments" parent="menu_patient_master" sequence="10" action="action_hospital_appointment" />
+        <menuitem id="menu_appointment" name="Appointments" parent="menu_hospital_root" sequence="10" action="" />
+        <menuitem id="menu_appointment_appointments" name="Appointments" parent="menu_appointment" sequence="10" action="action_hospital_appointment" />
     </data>
   </odoo>

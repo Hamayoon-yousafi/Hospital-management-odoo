@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <!-- We are creating three tags for patient.tag model and every time module upgrades, these tags will be created. -->
+    <record id="patient_tag_vip" model="patient.tag">
+        <field name="name">VIP</field>
+    </record>  
+
+    <record id="patient_tag_kid" model="patient.tag">
+        <field name="name">Kid</field>
+    </record>   
+
+    <record id="patient_tag_adult" model="patient.tag">
+        <field name="name">Adult</field>
+    </record>  
+    
+    <record id="patient_tag_adult" model="patient.tag">
+        <field name="name">Adult</field>
+        <field name="active" eval="False"/>
+        <!-- Since active is boolean field, we are passing the False into eval="" attribute -->
+    </record>   
+
+</odoo>
