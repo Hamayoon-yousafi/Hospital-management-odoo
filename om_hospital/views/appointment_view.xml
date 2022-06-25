@@ -48,9 +48,9 @@
                         <button name="action_in_consultation" string="In Consultation" type="object" states="draft" class="oe_highlight"/>
                         <button name="action_done" string="Mark As Done" type="object" states="in_consultation" class="oe_highlight" data-hotkey="v"/>
                         <!-- Calling wizard using type action button -->
-                        <!-- <button name="%(om_hospital.action_cancel_appointment)d" string="Cancel" type="action" states="draft,in_consultation" data-hotkey="z" /> -->
+                        <button name="%(om_hospital.action_cancel_appointment)d" string="Cancel" type="action" states="draft,in_consultation" context="{'default_appointment_id': active_id, 'hide_appointment': 1}"/>  
                         <!-- Calling wizard using type object button -->
-                        <button name="action_cancel" string="Cancel" type="object" states="draft,in_consultation" data-hotkey="z" />
+                        <!-- <button name="action_cancel" string="Cancel" type="object" states="draft,in_consultation" data-hotkey="z" /> -->
                         <button name="action_draft" string="Reset To Draft" type="object" states="cancel" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,in_consultation,done"/>
                     </header>
@@ -60,10 +60,11 @@
                             <h1>
                                 <field name="priority" widget="priority"/>
                             </h1>
-                        </div>
+                        </div> 
                         <!-- Form Fields -->
                         <group>
                             <group>
+                                <field name="name" />
                                 <field name="appointment_time" />
                                 <field name="booking_date" />
                                 <field name="doctor_id" widget="many2one_avatar_user"/>

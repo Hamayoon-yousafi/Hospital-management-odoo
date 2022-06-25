@@ -9,7 +9,7 @@
                     <sheet>  
                         <group>
                             <group>
-                                <field name="appointment_id" />  
+                                <field name="appointment_id" invisible="context.get('hide_appointment')" />  
                                 <field name="date_cancel"/>
                                 <field name="reason" />  
                             </group>

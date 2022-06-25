@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 from datetime import date
 
 
@@ -52,5 +53,10 @@ class HospitalPatient(models.Model):
     def name_get(self):
         return [(record.id, f"[{record.ref}] {record.name}") for record in self]
 
-
+    @api.constrains('date_of_birth')
+    def _check_date_of_birth(self):
+        for rec in self:
+            if rec.date_of_birth and rec.date_of_birth > fields.Date.today():
+                raise ValidationError("You cannot pick a future date.")
+            
     

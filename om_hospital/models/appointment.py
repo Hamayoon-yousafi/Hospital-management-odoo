@@ -3,9 +3,9 @@ from odoo import models, fields, api
 class HospitalAppointment(models.Model):
     _name = 'hospital.appointment'
     _description = 'Hospital Appointment'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
-    _rec_name = 'patient_id' 
+    _inherit = ['mail.thread', 'mail.activity.mixin'] 
 
+    name = fields.Char()
     patient_id = fields.Many2one('hospital.patient', string="Patient")
     appointment_time = fields.Datetime(default=fields.Datetime.now)
     ref = fields.Char(string="Patient Reference", help="Patient reference will be filled automatically once patient is selected.")
@@ -31,6 +31,10 @@ class HospitalAppointment(models.Model):
         string="Status")
     appointment_count = fields.Integer()
 
+    @api.model
+    def create(self, vals):   
+        vals['name'] = self.env['ir.sequence'].next_by_code('hospital.appointment') 
+        return super(HospitalAppointment, self).create(vals)
 
     @api.onchange('patient_id') # this function will be called when patient_id field is changed
     def onchange_patient_id(self):

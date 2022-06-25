@@ -11,4 +11,6 @@ class PatientTag(models.Model):
     color = fields.Integer()
     color_2 = fields.Char()
 
-    
+    _sql_constraints = [
+        ('unique_tags','unique (name)','Tags must be unique!')
+    ]
