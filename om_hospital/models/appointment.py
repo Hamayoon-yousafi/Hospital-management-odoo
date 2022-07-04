@@ -1,14 +1,16 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class HospitalAppointment(models.Model):
     _name = 'hospital.appointment'
     _description = 'Hospital Appointment'
-    _inherit = ['mail.thread', 'mail.activity.mixin'] 
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'id desc' 
 
     name = fields.Char()
-    patient_id = fields.Many2one('hospital.patient', string="Patient")
+    patient_id = fields.Many2one('hospital.patient', string="Patient", ondelete='restrict')
     appointment_time = fields.Datetime(default=fields.Datetime.now)
-    ref = fields.Char(string="Patient Reference", help="Patient reference will be filled automatically once patient is selected.")
+    ref = fields.Char(string="Patient Reference", help="Patient reference will be filled automatically once patient is selected.", readonly=True)
     booking_date = fields.Date(default=fields.Date.context_today) 
     gender = fields.Selection(related="patient_id.gender") # through patient_id, which is connected through relationship with patient model, has access to patient.gender
     perscription = fields.Html()
@@ -30,6 +32,8 @@ class HospitalAppointment(models.Model):
         required=True, 
         string="Status")
     appointment_count = fields.Integer()
+    operation_id = fields.Many2one('hospital.operation')
+    progress = fields.Integer(compute="_compute_progress")
 
     @api.model
     def create(self, vals):   
@@ -40,6 +44,12 @@ class HospitalAppointment(models.Model):
     def onchange_patient_id(self):
         self.ref = self.patient_id.ref # we have access to the patient through patient_id field and thus to patient's ref through patient_id.ref. 
     
+    def unlink(self):
+        for rec in self:
+            if not rec.state == 'draft':
+                raise ValidationError('You can delete an appointment in draft state only.')
+            return super(HospitalAppointment, rec).unlink()
+
     def rainbow_action(self):
         return {
             'effect': {
@@ -51,14 +61,31 @@ class HospitalAppointment(models.Model):
 
     def action_in_consultation(self):
         self.state = "in_consultation"
+
     def action_done(self):
-        self.state = "done" 
+        for rec in self:
+            if rec.state == 'in_consultation':
+                rec.state = "done" 
+    
     def action_cancel(self):
         action = self.env.ref('om_hospital.action_cancel_appointment').read()[0]
-        return action
-        #self.state = "cancel" 
+        return action 
+
     def action_draft(self):
         self.state = "draft"
+
+    @api.depends('state')
+    def _compute_progress(self):
+        for rec in self:
+            if rec.state == 'draft':
+                progress = 25
+            elif rec.state == 'in_consultation':
+                progress = 50
+            elif rec.state == 'done':
+                progress = 100
+            else:
+                progress = 0
+            rec.progress = progress
 
 class AppointmentPharmacy(models.Model):
     _name = "appointment.pharmacy.lines"
@@ -75,5 +102,6 @@ class AppointmentPharmacy(models.Model):
     def _compute_price(self): 
         for rec in self: 
             rec.total_price = rec.price_unit * rec.qty 
-    
-
+     
+    def onchange_stage_id(self): 
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> avc") 

@@ -13,8 +13,6 @@
                     There is no data!
                 </p>
             </field>
-        </record>  
-        <!-- the above action is called by clicking on below menuitem -->
-        <menuitem id="menu_female_patient" name="Female Patients" parent="menu_patient_master" sequence="20" action="action_hospital_female_patient" />
+        </record>   
     </data>
   </odoo>

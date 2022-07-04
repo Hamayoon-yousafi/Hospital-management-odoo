@@ -6,8 +6,10 @@
             <field name="model">hospital.patient</field>
             <field name="arch" type="xml">
                 <tree sample="1" multi_edit="1">  
-                    <field name="name" string="Patient Name" />
-                    <field name="age" />  
+                    <field name="name" string="Patient Name"/>
+                    <field name="age" avg="Age Average"/> 
+                    <field name="date_of_birth"/> 
+                    <field name="appointment_count" sum="Appointment Count"/> 
                 </tree>
             </field>
         </record>     
@@ -19,20 +21,48 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet> 
+                        <div class="alert alert-info text-center o_form_header" role="alert" attrs="{'invisible': [('is_birthday', '=', False)]}">
+                            <a class="close" data-dismiss="alert">x</a>
+                            <div>
+                                <strong>Today is Birthday!</strong>
+                            </div>
+                            <div>
+                                Wish <field name="name" readonly="1"/>
+                            </div>
+                        </div>
                         <field name="image" widget="image" class="oe_avatar"/>
-                        <group>
-                            <group>
+                        <div class="oe_title">
+                            <h3>
+                                <field name="ref" string="Reference"/> <!-- ref is defined in the model -->
+                            </h3>
+                            <h2>
+                                <label for="name" string="Name" class="oe_edit_only"/>
                                 <field name="name" /> <!-- name is defined in the model -->
+                            </h2>
+                        </div>
+                        <group>
+                            <group> 
                                 <field name="date_of_birth" /> <!-- date of birht is computed based on age field -->
-                                <field name="gender" invisible="context.get('hide_gender')"/> <!-- gender is defined in the model -->
+                                <field name="gender" invisible="context.get('hide_gender')" widget="radio"/> <!-- gender is defined in the model -->
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </group>
                             <group>
                                 <field name="age" /> <!-- age is defined in the model -->
-                                <field name="ref" string="Reference"/> <!-- ref is defined in the model -->
+                                <field name="appointment_count" />  
                                 <field name="active" invisible="1"/> <!-- active is defined in the model -->
                                 <field name="appointment_id"/> <!-- appointment_id is defined in the model -->
                             </group>
+                            <group string="Other information">
+                                <field name="parent"/> 
+                                <field name="marital_status"/> 
+                                <field name="partner_name" attrs="{'required': [('marital_status', '=', 'married')], 'invisible': [('marital_status', '=', 'single')]}"/> 
+                            </group>
+                            <group string="Patient Contact">
+                                <field name="phone" widget="phone" />
+                                <field name="email" widget="email" />
+                                <field name="website" widget="url" /> 
+                            </group>
+                            <field name="is_birthday" invisible="1"/>
                         </group> 
                     </sheet>
                     <!-- Chatter -->
@@ -87,9 +117,6 @@
                     There is no data!
                 </p>
             </field>
-        </record>  
-
-        <!-- the above action is called by clicking on below menuitem -->
-        <menuitem id="menu_patient" name="Patients" parent="menu_patient_master" sequence="0" action="action_hospital_patient" />
+        </record>   
     </data>
   </odoo>

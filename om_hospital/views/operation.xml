@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+        <!-- action that is called by the menuitem with id menu_patient -->
+        <record id="action_operation" model="ir.actions.act_window">
+            <field name="name">Operations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hospital.operation</field>
+            <field name="view_mode">tree,form</field>  
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    There is no data!
+                </p>
+            </field>
+        </record>   
+    </data>
+  </odoo>

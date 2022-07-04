@@ -19,8 +19,12 @@
             <field name="name">hospital.appointment.tree</field>
             <field name="model">hospital.appointment</field>
             <field name="arch" type="xml">
-                <tree decoration-success="state == 'done'" decoration-danger="state == 'cancel'" sample="1" multi_edit="1">  
+                <tree decoration-success="state == 'done'" decoration-danger="state == 'cancel'" sample="1" multi_edit="1">
+                    <header>
+                        <button name="action_in_consultation" string="In Consultation" type="object" class="oe_highlight"/>
+                    </header>  
                     <field name="patient_id" optional="show"/> 
+                    <field name="name" />
                     <field name="doctor_id" widget="many2one_avatar_user"/>
                     <field name="gender" string="Sex" optional="hide"/>
                     <field name="booking_date" optional="show"/> 
@@ -33,9 +37,28 @@
                         decoration-danger="state == 'cancel'"
                         decoration-warning="state == 'in_consultation'" 
                         />
+                    <button name="action_done" type="object" class="fa fa-check btn-success" attrs="{'invisible': [('state', '=', 'done')]}"/>
+                    <groupby name="patient_id">
+                        <button name="action_test" string="Click me!" type="object" class="oe_highlight"/>
+                    </groupby>
+                    <field name="progress" widget="progressbar"/>
                 </tree>
             </field>
-        </record>    
+        </record>
+        
+        <!-- Server action -->
+        <record model="ir.actions.server" id="action_mark_as_done">
+            <field name="name">Mark As Done</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_hospital_appointment"/>
+            <field name="binding_model_id" ref="model_hospital_appointment"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                for record in records:
+                    record.action_done()
+            </field>
+        </record>
 
         <!-- form view for appointment model -->
         <record id="view_hospital_appointment_form" model="ir.ui.view">
@@ -52,7 +75,7 @@
                         <!-- Calling wizard using type object button -->
                         <!-- <button name="action_cancel" string="Cancel" type="object" states="draft,in_consultation" data-hotkey="z" /> -->
                         <button name="action_draft" string="Reset To Draft" type="object" states="cancel" class="oe_highlight"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,in_consultation,done"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_consultation,done" options="{'clickable':1}" on_change="onchange_stage_id"/>
                     </header>
                     <sheet> 
                         <!-- Priority Widget -->
@@ -67,17 +90,21 @@
                                 <field name="name" />
                                 <field name="appointment_time" />
                                 <field name="booking_date" />
-                                <field name="doctor_id" widget="many2one_avatar_user"/>
+                                <field name="doctor_id" widget="many2one_avatar"/>
+                                <field name="operation_id"/>
                             </group> 
                             <group>
-                                <field name="patient_id" default_focus="1"/>
+                                <field name="patient_id" default_focus="1" widget="selection"/>
                                 <field name="gender"/>  
-                                <field name="ref"/>
-                                <field name="hide_sales_price"/> 
+                                <field name="ref" force_save="1"/>
+                                <field name="hide_sales_price"/>
                             </group>
                         </group> 
                         <!-- Notebook -->
                         <notebook>
+                            <page string="Progress" name="progress"> 
+                                <field name="progress" widget="gauge" options="{'style': 'width:200px; height: 200px;'}"/> 
+                            </page>
                             <page string="Perscription" name="prescription">
                                 <group>
                                     <field name="perscription" placeholder="Enter your prescription" options="{'collaborative': true, 'resizable':true, 'codeview':true}"/>
@@ -139,10 +166,6 @@
                     </group>
                 </search>
             </field>
-        </record>    
-       
-        <!-- the above action is called by clicking on below menuitem -->
-        <menuitem id="menu_appointment" name="Appointments" parent="menu_hospital_root" sequence="10" action="" />
-        <menuitem id="menu_appointment_appointments" name="Appointments" parent="menu_appointment" sequence="10" action="action_hospital_appointment" />
+        </record>     
     </data>
   </odoo>

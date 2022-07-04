@@ -48,9 +48,6 @@
                     There is no data!
                 </p>
             </field>
-        </record>  
-
-        <!-- the above action is called by clicking on below menuitem -->
-        <menuitem id="menu_patient_tags" name="Tags" parent="menu_configuration" sequence="10" action="action_patient_tag" />
+        </record>   
     </data>
   </odoo>
