@@ -11,6 +11,18 @@
                     There is no data!
                 </p>
             </field>
-        </record>   
+        </record> 
+        <record id="hospital_operation_view_tree" model="ir.ui.view">
+            <field name="name">hospital.operation.view.tree</field>
+            <field name="model">hospital.operation</field>
+            <field name="arch" type="xml">
+                <tree string="">
+                    <field name="sequence" widget="handle"/>
+                    <field name="operation_name" />
+                    <field name="doctor_id" />
+                </tree>
+            </field>
+        </record>
+        
     </data>
   </odoo>

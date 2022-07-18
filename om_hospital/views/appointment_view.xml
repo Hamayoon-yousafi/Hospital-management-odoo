@@ -5,7 +5,7 @@
             <field name="name">Appointments</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hospital.appointment</field>
-            <field name="view_mode">tree,form,activity</field>
+            <field name="view_mode">tree,form,calendar,activity</field>
             <field name="context"></field>  
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -23,7 +23,7 @@
                     <header>
                         <button name="action_in_consultation" string="In Consultation" type="object" class="oe_highlight"/>
                     </header>  
-                    <field name="patient_id" optional="show"/> 
+                    <field name="patient_id" optional="show" decoration-bf="1"/> 
                     <field name="name" />
                     <field name="doctor_id" widget="many2one_avatar_user"/>
                     <field name="gender" string="Sex" optional="hide"/>
@@ -36,15 +36,37 @@
                         decoration-info="state == 'draft'" 
                         decoration-danger="state == 'cancel'"
                         decoration-warning="state == 'in_consultation'" 
-                        />
-                    <button name="action_done" type="object" class="fa fa-check btn-success" attrs="{'invisible': [('state', '=', 'done')]}"/>
+                    />
                     <groupby name="patient_id">
                         <button name="action_test" string="Click me!" type="object" class="oe_highlight"/>
                     </groupby>
                     <field name="progress" widget="progressbar"/>
+                    <button name="action_done" type="object" class="fa fa-check btn-success" attrs="{'invisible': [('state', '=', 'done')]}"/>
                 </tree>
             </field>
         </record>
+
+         <!-- calender view for Appointment --> 
+         <record id="view_hospital_appointment_calender" model="ir.ui.view">
+            <field name="name">hospital.appointment.calender</field>
+            <field name="model">hospital.appointment</field>
+            <field name="arch" type="xml">
+                <calendar 
+                        string="Appointment" 
+                        date_start="booking_date" 
+                        date_delay="duration" 
+                        mode="month" 
+                        color="state" 
+                        quick_add="False"
+                        form_view_id="%(om_hospital.view_hospital_appointment_form)d"
+                        event_open_popup="True"
+                        event_limit="5"
+                    >
+                    <field name="patient_id" filters="1" avatar_field="image"/>
+                    <field name="state" invisible="1" filters="1" />
+                </calendar>
+            </field>
+        </record>  
         
         <!-- Server action -->
         <record model="ir.actions.server" id="action_mark_as_done">
@@ -75,9 +97,12 @@
                         <!-- Calling wizard using type object button -->
                         <!-- <button name="action_cancel" string="Cancel" type="object" states="draft,in_consultation" data-hotkey="z" /> -->
                         <button name="action_draft" string="Reset To Draft" type="object" states="cancel" class="oe_highlight"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,in_consultation,done" options="{'clickable':1}" on_change="onchange_stage_id"/>
+                        <button name="action_share_whatsapp" string="Share in Whatsapp" type="object" icon="fa-whatsapp" attrs="{'invisible': [('state', 'in', ('draft','done'))]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_consultation,done" options="{'clickable':1}"/>
                     </header>
-                    <sheet> 
+                    <sheet>
+                        <widget name="web_ribbon" title="Done" bg_color="bg-success" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                        <widget name="web_ribbon" title="Cancelled" bg_color="bg-danger" attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
                         <!-- Priority Widget -->
                         <div class="oe_title">
                             <h1>
@@ -90,6 +115,7 @@
                                 <field name="name" />
                                 <field name="appointment_time" />
                                 <field name="booking_date" />
+                                <field name="duration" widget="float_time"/>
                                 <field name="doctor_id" widget="many2one_avatar"/>
                                 <field name="operation_id"/>
                             </group> 
@@ -115,9 +141,10 @@
                                     <field name="pharmacy_line_ids">
                                         <tree editable="bottom">
                                             <field name="product_id" />
-                                            <field name="price_unit" attrs="{'column_invisible': [('parent.hide_sales_price', '=', True)]}"/>
+                                            <field name="price_unit" attrs="{'column_invisible': [('parent.hide_sales_price', '=', True)]}" widget="monetary"/>
                                             <field name="qty"/>
-                                            <field name="total_price"/>
+                                            <field name="currency_id" invisible="1" />
+                                            <field name="price_subtotal"/>
                                         </tree>
                                     </field>
                                 </group>

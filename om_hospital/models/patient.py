@@ -12,7 +12,7 @@ class HospitalPatient(models.Model):
     name = fields.Char(string="Name", tracking=True, required=True)
     date_of_birth = fields.Date()
     ref = fields.Char(string="Reference", tracking=True, readonly=True)
-    age = fields.Integer(string="Age", tracking=True, compute="_compute_age", inverse="_inverse_compute_age", search="_search_age")
+    age = fields.Integer(string="Age", tracking=True, compute="_compute_age", inverse="_inverse_compute_age", search="_search_age", store=True)
     gender = fields.Selection([("male", "Male"), ("female", "Female")], tracking=True)
     active = fields.Boolean(string="Active", default=True, tracking=True) # Set the default to True so new records are active (unarchived) by defualt.
     appointment_id = fields.Many2one('hospital.appointment', string="Appointment")
@@ -103,3 +103,14 @@ class HospitalPatient(models.Model):
                 if today.day == rec.date_of_birth.day and today.month == rec.date_of_birth.month:
                     is_birthday = True
             rec.is_birthday = is_birthday
+
+    def action_view_appointments(self):
+        for rec in self:
+            return {
+                'name': 'Appointments',
+                'res_model': 'hospital.appointment',
+                'view_mode': 'list,form,activity,calendar',
+                'context': {'default_patient_id': rec.id},
+                'domain': [('patient_id', '=', rec.id)],
+                'type': 'ir.actions.act_window' 
+            }

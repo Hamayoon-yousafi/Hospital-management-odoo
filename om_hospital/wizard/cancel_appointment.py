@@ -19,6 +19,7 @@ class CancelAppointmentWizard(models.TransientModel):
 
     def action_cancel(self):
         for rec in self:
+            # for settings
             cancel_days = rec.env['ir.config_parameter'].get_param('om_hospital.cancel_days')
             allowed_date = rec.appointment_id.booking_date - relativedelta.relativedelta(days=int(cancel_days))
             if allowed_date < datetime.date.today():

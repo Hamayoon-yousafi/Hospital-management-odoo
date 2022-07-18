@@ -40,6 +40,8 @@
         'views/res_config_settings_views.xml',
         'views/operation.xml',
         'views/menu.xml',
+        'reports/patient_card.xml',
+        'reports/report.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

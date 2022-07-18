@@ -34,6 +34,7 @@ class HospitalAppointment(models.Model):
     appointment_count = fields.Integer()
     operation_id = fields.Many2one('hospital.operation')
     progress = fields.Integer(compute="_compute_progress")
+    duration = fields.Float()
 
     @api.model
     def create(self, vals):   
@@ -86,6 +87,23 @@ class HospitalAppointment(models.Model):
             else:
                 progress = 0
             rec.progress = progress
+    
+    @api.onchange('state')
+    def onchange_stage_id(self): 
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> avc") 
+
+    def action_share_whatsapp(self):
+        if not self.state == 'in_consultation':
+            raise ValidationError('The appointment must be confirmed before being able to send Whatsapp confirmation message.')
+        if not self.patient_id.phone:
+            raise ValidationError('The patient has not provided thier Whatsapp Number')
+        msg = f'Hello {self.patient_id.name}, Your appointment at {self.appointment_time} was confirmed. Your appointment name is {self.name}.'
+        whatsapp_api_url = f'https://api.whatsapp.com/send?phone={self.patient_id.phone}&text={msg}' 
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'new',
+            'url': whatsapp_api_url
+        }
 
 class AppointmentPharmacy(models.Model):
     _name = "appointment.pharmacy.lines"
@@ -96,6 +114,14 @@ class AppointmentPharmacy(models.Model):
     qty = fields.Integer(default=1)
     total_price = fields.Float(compute="_compute_price")
     appointment_id = fields.Many2one('hospital.appointment', string="Appointment")
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
+    currency_id = fields.Many2one(related='company_id.currency_id')
+    price_subtotal = fields.Monetary(compute='_compute_price_subtotal')
+    
+    @api.depends('price_unit', 'qty')
+    def _compute_price_subtotal(self):
+        for rec in self:
+            rec.price_subtotal = rec.price_unit * rec.qty
 
     # This decorator will make age field change even without saving the changes made to date_of_birth. Changing age will occur while changing date_of_birth. 
     @api.depends('qty') 
@@ -103,5 +129,6 @@ class AppointmentPharmacy(models.Model):
         for rec in self: 
             rec.total_price = rec.price_unit * rec.qty 
      
-    def onchange_stage_id(self): 
-        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> avc") 
+    
+
+  
